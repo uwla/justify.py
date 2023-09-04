@@ -1,18 +1,4 @@
-#!/usr/bin/python3
-
-def safe_input():
-    try:
-        return input()
-    except EOFError:
-        return None
-
-def read_input():
-    str = ''
-    line = safe_input()
-    while line != None:
-        str += line + "\n"
-        line = safe_input()
-    return str
+from input import read_input
 
 def justify(text, n=80):
     words = text.split()
@@ -75,7 +61,6 @@ def justify(text, n=80):
     text += ' '.join(last_sentence['words'])
 
     return text
-
 
 text = read_input()
 text_justified = justify(text)
