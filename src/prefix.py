@@ -16,32 +16,27 @@ def detect_common_prefix(text):
     if l < 2:
         raise Exception('No enough lines')
 
-    a = lines[0]
-    b = lines[1] 
-    la = len(a)
-    lb = len(b)
-    i = 0
     pattern = ''
-    while i < la and i < lb:
-        if a[i] == b[i]:
-            pattern += a[i]
-        else:
+    i = 0
+    while True:
+        stop = False
+        if len(lines[0]) <= i:
             break
+        c = lines[0][i]
+        for line in lines[1:]:
+            if len(line) <= i or line[i] != c:
+                stop = True
+                break
+        if stop:
+            break
+        pattern += c
         i += 1
-
-    if pattern == '':
-        return pattern
-    
-    for i in range(2, l):
-        line = lines[i]
-        if not line.startswith(pattern):
-            return ''
 
     return pattern
 
 a = """
 # cupiditate laborum.Dicta similique quaerat totam ipsum delectus et. Sequi
-# sonsequatur aliquam et culpa omnis et assumenda. Dignissimos ad quo totam
+# consequatur aliquam et culpa omnis et assumenda. Dignissimos ad quo totam
 # excepturi.
 """
 b = """
@@ -52,5 +47,5 @@ b = """
         // excepturi.
 """
 
-print(detect_common_start(trim_lines(a)))
-print(detect_common_start(trim_lines(b)))
+print(detect_common_prefix(trim_lines(a)))
+print(detect_common_prefix(trim_lines(b)))
