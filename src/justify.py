@@ -18,27 +18,23 @@ def read_input():
 
 # ------------------------------------------------------------------------------
 
-def trim_lines(text):
-    """Trim empty lines at both ends of a text
-        Args:
-            text_block (string): string representing a text block
-        Returns:
-            string: the indentation
-    """
-    lines = text.split('\n')
-
-    l = len(lines)
-    if l == 0:
-        raise Exception('No lines')
-
-    if lines[0] == '':
-        lines = lines[1:]
-
-    l = len(lines) 
-    if l > 0 and lines[-1] == '':
-        lines = lines[0:(l-1)]
-    
-    return '\n'.join(lines)
+def text2blocks(text):
+    lines = text.splitlines()
+    last_line = None
+    blocks = []
+    block = ''
+    for line in lines:
+        if line == '' or re.match('^[\s\t]+$', line):
+            blocks.append(block)
+            blocks.append(line)
+            block = ''
+        else:
+            if block != '':
+                block += '\n'
+            block += line
+            if line is lines[-1]:
+                blocks.append(block)
+    return blocks
 
 # ------------------------------------------------------------------------------
 
@@ -175,8 +171,18 @@ def justify(text, n=80):
 
     return text
 
+def justify_blocks(text, n=80):
+    blocks = text2blocks(text)
+    new_text = ''
+    for block in blocks:
+        if block == '' or re.match('^[\s\t]+$', block):
+            new_text += '\n'
+        else:
+            new_text += justify(block, n) + '\n'
+    return new_text
+
 # ------------------------------------------------------------------------------
 
 text = read_input()
-text_justified = justify(text)
+text_justified = justify_blocks(text)
 print(text_justified)
