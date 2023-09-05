@@ -30,7 +30,10 @@ def text2blocks(text):
     last_line = None
     blocks = []
     block = ''
-    for line in lines:
+    l = len(lines)
+    for i in range(0, l):
+        line = lines[i]
+        # print(block)
         if is_blank(line):
             blocks.append(block)
             blocks.append(line)
@@ -39,7 +42,7 @@ def text2blocks(text):
             if block != '':
                 block += '\n'
             block += line
-            if line is lines[-1]:
+            if i == l-1:
                 blocks.append(block)
     return blocks
 
