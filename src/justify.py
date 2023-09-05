@@ -18,13 +18,19 @@ def read_input():
 
 # ------------------------------------------------------------------------------
 
+def is_alphanumeric(c):
+    return re.match('^[a-zA-Z0-9]$', c)
+
+def is_blank(line):
+    return line == '' or re.match('^[\s\t]+$', line)
+
 def text2blocks(text):
     lines = text.splitlines()
     last_line = None
     blocks = []
     block = ''
     for line in lines:
-        if line == '' or re.match('^[\s\t]+$', line):
+        if is_blank(line):
             blocks.append(block)
             blocks.append(line)
             block = ''
@@ -84,7 +90,7 @@ def detect_common_prefix(text):
         string: the indentation
     """
 
-    lines = text.split('\n')
+    lines = text.splitlines()
     l = len(lines)
     if l < 2:
         raise Exception('No enough lines')
@@ -96,6 +102,8 @@ def detect_common_prefix(text):
         if len(lines[0]) <= i:
             break
         c = lines[0][i]
+        if is_alphanumeric(c):
+            break
         for line in lines[1:]:
             if len(line) <= i or line[i] != c:
                 stop = True
@@ -175,7 +183,7 @@ def justify_blocks(text, n=80):
     blocks = text2blocks(text)
     new_text = ''
     for block in blocks:
-        if block == '' or re.match('^[\s\t]+$', block):
+        if is_blank(block):
             new_text += '\n'
         else:
             new_text += justify(block, n) + '\n'
