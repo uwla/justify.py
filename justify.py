@@ -221,6 +221,10 @@ def justify_blocks(text, n=80, depth=1):
                 block = justify(block, n-l)
             block = prepend_common_prefix(block, prefix)
             new_text += block
+
+    # for some reason, the algorithm adds an extra new line. So, remove it.
+    new_text = new_text[:-1]
+
     return new_text
 
 # ------------------------------------------------------------------------------
