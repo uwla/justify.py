@@ -1,3 +1,4 @@
+from sys import argv
 import re
 
 # ------------------------------------------------------------------------------
@@ -220,7 +221,16 @@ def justify_blocks(text, n=80, depth=1):
     return new_text
 
 # ------------------------------------------------------------------------------
+# MAIN
+
+# default line width
+w = 80
+
+# dumb args parser
+if len(argv) == 3:
+    if argv[1] == "-w":
+        w = int(argv[2])
 
 text = read_input()
-text_justified = justify_blocks(text)
+text_justified = justify_blocks(text, w)
 print(text_justified)
