@@ -93,7 +93,7 @@ def detect_common_prefix(text):
     lines = text.splitlines()
     l = len(lines)
     if l < 2:
-        raise Exception('No enough lines')
+        return ''
 
     pattern = ''
     i = 0
@@ -114,6 +114,20 @@ def detect_common_prefix(text):
         i += 1
 
     return pattern
+
+def remove_common_prefix(text, prefix):
+    lines = text.splitlines()
+    new_text = ''
+    for line in lines:
+        new_text += line.replace(prefix, '') + '\n'
+    return new_text
+
+def prepend_common_prefix(text, prefix):
+    lines = text.splitlines()
+    new_text = ''
+    for line in lines:
+        new_text += prefix + line + '\n'
+    return new_text
 
 # ------------------------------------------------------------------------------
 
@@ -186,7 +200,13 @@ def justify_blocks(text, n=80):
         if is_blank(block):
             new_text += '\n'
         else:
-            new_text += justify(block, n) + '\n'
+            prefix = detect_common_prefix(block)
+            l = len(prefix)
+            block = remove_common_prefix(block, prefix)
+            block = justify(block, n-l)
+            block = prepend_common_prefix(block, prefix)
+            new_text += block
+
     return new_text
 
 # ------------------------------------------------------------------------------
