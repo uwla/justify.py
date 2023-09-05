@@ -105,7 +105,7 @@ def detect_common_prefix(text):
         if is_alphanumeric(c):
             break
         for line in lines[1:]:
-            if len(line) <= i or line[i] != c:
+            if (len(line) <= i or line[i] != c) and (i>0 and c != ' '):
                 stop = True
                 break
         if stop:
@@ -118,8 +118,16 @@ def detect_common_prefix(text):
 def remove_common_prefix(text, prefix):
     lines = text.splitlines()
     new_text = ''
+
     for line in lines:
-        new_text += line.replace(prefix, '') + '\n'
+        new_line =  line.replace(prefix, '')
+
+        # HEURISTIC: if the prefix ends with space,
+        # we consider removing the prefix without the last space.
+        if new_line == line and prefix.endswith(' '):
+            new_line =  line.replace(prefix[:-1], '')
+
+        new_text += new_line + '\n'
     return new_text
 
 def prepend_common_prefix(text, prefix):
@@ -193,7 +201,7 @@ def justify(text, n=80):
 
     return text
 
-def justify_blocks(text, n=80):
+def justify_blocks(text, n=80, depth=1):
     blocks = text2blocks(text)
     new_text = ''
     for block in blocks:
@@ -203,10 +211,12 @@ def justify_blocks(text, n=80):
             prefix = detect_common_prefix(block)
             l = len(prefix)
             block = remove_common_prefix(block, prefix)
-            block = justify(block, n-l)
+            if depth > 0 and l > 0:
+                block = justify_blocks(block, n-l, depth-1)
+            else:
+                block = justify(block, n-l)
             block = prepend_common_prefix(block, prefix)
             new_text += block
-
     return new_text
 
 # ------------------------------------------------------------------------------
