@@ -30,6 +30,9 @@ def is_blank(line):
 def is_start_of_list_item(line):
     return re.match('^((\d+[\.\)])|[\*-]|\\\\item) ', line) != None
 
+def is_latex_command(line):
+    return re.match('^\\\\[a-z]+{.*?}$', line) != None
+
 def text2blocks(text):
     lines = text.splitlines()
     last_line = None
@@ -46,6 +49,11 @@ def text2blocks(text):
             if block != '':
                 blocks.append(block)
             block = line
+        elif is_latex_command(line):
+            if block != '':
+                blocks.append(block)
+            blocks.append(line)
+            block = ''
         else:
             if block != '':
                 block += '\n'
