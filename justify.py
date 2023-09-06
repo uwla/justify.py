@@ -1,6 +1,4 @@
 #!/usr/bin/python3
-
-from sys import argv
 import re
 
 # ------------------------------------------------------------------------------
@@ -250,14 +248,16 @@ def justify_blocks(text, n=80, depth=1):
 # ------------------------------------------------------------------------------
 # MAIN
 
-# default line width
-w = 80
+if __name__ == "__main__":
+    # default line width
+    w = 80
 
-# dumb args parser
-if len(argv) == 3:
-    if argv[1] == "-w":
-        w = int(argv[2])
+    # dumb args parser
+    from sys import argv
+    if len(argv) == 3:
+        if argv[1] == "-w":
+            w = int(argv[2])
 
-text = read_input()
-text_justified = justify_blocks(text, w)
-print(text_justified)
+    text = read_input()
+    text_justified = justify_blocks(text, w)
+    print(text_justified)
