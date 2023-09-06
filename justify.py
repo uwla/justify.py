@@ -25,7 +25,10 @@ def is_alphanumeric(c):
     return re.match('^[a-zA-Z0-9]$', c)
 
 def is_blank(line):
-    return line == '' or re.match('^[\s\t]+$', line)
+    return line == '' or re.match('^[\s\t]+$', line) != None
+
+def is_start_of_list_item(line):
+    return re.match('^((\d+[\.\)])|[\*-]) ', line) != None
 
 def text2blocks(text):
     lines = text.splitlines()
@@ -35,11 +38,14 @@ def text2blocks(text):
     l = len(lines)
     for i in range(0, l):
         line = lines[i]
-        # print(block)
         if is_blank(line):
             blocks.append(block)
             blocks.append(line)
             block = ''
+        elif is_start_of_list_item(line):
+            if block != '':
+                blocks.append(block)
+            block = line
         else:
             if block != '':
                 block += '\n'
