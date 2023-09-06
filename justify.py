@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 from sys import argv
 import re
 
@@ -109,7 +111,8 @@ def detect_common_prefix(text):
         if is_alphanumeric(c):
             break
         for line in lines[1:]:
-            if (len(line) <= i or line[i] != c) and (i>0 and c != ' '):
+            l = len(line)
+            if (i >= l and c != ' ') or (i < l and line[i] != c):
                 stop = True
                 break
         if stop:
