@@ -28,7 +28,7 @@ def is_blank(line):
     return line == '' or re.match('^[\s\t]+$', line) != None
 
 def is_start_of_list_item(line):
-    return re.match('^((\d+[\.\)])|[\*-]) ', line) != None
+    return re.match('^((\d+[\.\)])|[\*-]|\\\\item) ', line) != None
 
 def text2blocks(text):
     lines = text.splitlines()
