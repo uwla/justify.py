@@ -29,7 +29,7 @@ def is_start_of_list_item(line):
     return re.match('^((\d+[\.\)])|[\*-]|\\\\item) ', line) != None
 
 def is_latex_command(line):
-    return re.match('^\\\\[a-z]+{.*?}$', line) != None
+    return re.match('^\\\\[a-z]+(\[.*?\])?{.*?}$', line) != None
 
 def text2blocks(text):
     lines = text.splitlines()
@@ -40,7 +40,8 @@ def text2blocks(text):
     for i in range(0, l):
         line = lines[i]
         if is_blank(line):
-            blocks.append(block)
+            if block != '':
+                blocks.append(block)
             blocks.append(line)
             block = ''
         elif is_start_of_list_item(line):
@@ -59,7 +60,7 @@ def text2blocks(text):
 
         # We are in the last line and have a non-empty block we need to add it.
         # If it is a blank block, it was already added.
-        if block != '' and i == l-1:
+        if not is_blank(block) and i == l-1:
             blocks.append(block)
     return blocks
 
