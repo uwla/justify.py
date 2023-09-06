@@ -217,6 +217,15 @@ def justify(text, n=80):
 
     return text
 
+def justify_list_item(text, n):
+    bullet = re.match('^((\d+[\.\)])|[\*-]|\\\\item) ', text)[0]
+    l = len(bullet)
+    indentation = ' ' * l
+    new_text = justify(text.replace(bullet, '', 1), n-l)
+    new_text = prepend_common_prefix(new_text, indentation)
+    new_text = new_text.replace(indentation, bullet, 1)
+    return new_text
+
 def justify_blocks(text, n=80, depth=2):
     indentation = detect_indentation(text)
     if indentation != '':
@@ -227,6 +236,9 @@ def justify_blocks(text, n=80, depth=2):
     for block in blocks:
         if is_blank(block):
             new_text += '\n'
+        elif is_start_of_list_item(block):
+            block = justify_list_item(block, n)
+            new_text += indentation + block
         else:
             prefix = detect_common_prefix(block)
             if prefix == '':
