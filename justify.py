@@ -50,8 +50,11 @@ def text2blocks(text):
             if block != '':
                 block += '\n'
             block += line
-            if i == l-1:
-                blocks.append(block)
+
+        # We are in the last line and have a non-empty block we need to add it.
+        # If it is a blank block, it was already added.
+        if block != '' and i == l-1:
+            blocks.append(block)
     return blocks
 
 # ------------------------------------------------------------------------------
