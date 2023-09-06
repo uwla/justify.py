@@ -114,3 +114,49 @@ Voluptas cumque rerum et molestias quos at quis.""",
         blocks = justify.text2blocks(tests[i])
         assert len(blocks) == len(expected[i])
         assert blocks == expected[i]
+
+def test_detect_common_prefix():
+    tests = [
+# test 1
+"""# Lorem upsum
+# Quae voluptatum earum sapiente unde ab corporis ducimus iure. Debitis
+# voluptatibus id incidunt incidunt doloremque. Est ut laborum dolorum voluptas
+# reiciendis velit itaque voluptatibus. Tempora repellendus iure qui natus rerum""",
+
+# test 2
+"""# Quae voluptatum earum sapiente unde ab corporis ducimus iure. Debitis
+# voluptatibus id incidunt incidunt doloremque. Est ut laborum dolorum voluptas
+#
+#
+# reiciendis velit itaque voluptatibus. Tempora repellendus iure qui natus rerum
+# reiciendis""",
+
+# test 3
+"""\t\t\tHello
+\t\t\tQuae voluptatum earum sapiente unde ab corporis ducimus iure. Debitis
+\t\t\tvoluptatibus id incidunt incidunt doloremque. Est ut laborum dolorum voluptas
+""",
+
+# test 4
+"""    Lorem upsum
+    Quae voluptatum earum sapiente unde ab corporis ducimus iure. Debitis
+    voluptatibus id incidunt incidunt doloremque. Est ut laborum dolorum voluptas
+""",
+
+# test 5
+"""    // LOREM UPSUM
+    //
+    // Tempora repellendus iure qui natus rerum
+    // voluptatibus id incidunt incidunt doloremque.
+    // Est ut laborum dolorum voluptas
+    //
+    //
+    // Quae voluptatum earum sapiente unde ab corporis ducimus iure. Debitis
+""",
+
+    ]
+    expected = [
+        "# ", "# ", "\t\t\t", "    ", "    // "
+    ]
+    for i in range(0, len(tests)):
+        assert expected[i] == justify.detect_common_prefix(tests[i])
