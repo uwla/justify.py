@@ -128,7 +128,7 @@ def detect_common_prefix(text):
             break
         for line in lines[1:]:
             l = len(line)
-            if (i >= l and c != ' ') or (i < l and line[i] != c):
+            if (i >= l or line[i] != c):
                 stop = True
                 break
         if stop:
@@ -141,15 +141,8 @@ def detect_common_prefix(text):
 def remove_common_prefix(text, prefix):
     lines = text.splitlines()
     new_text = ''
-
     for line in lines:
         new_line =  line.replace(prefix, '', 1)
-
-        # HEURISTIC: if the prefix ends with space,
-        # we consider removing the prefix without the last space.
-        if new_line == line and prefix.endswith(' '):
-            new_line =  line.replace(prefix[:-1], '')
-
         new_text += new_line + '\n'
     return new_text
 
@@ -224,22 +217,28 @@ def justify(text, n=80):
 
     return text
 
-def justify_blocks(text, n=80, depth=1):
-    blocks = text2blocks(text)
+def justify_blocks(text, n=80, depth=2):
+    indentation = detect_indentation(text)
+    if indentation != '':
+        blocks = text2blocks(remove_common_prefix(text, indentation))
+    else:
+        blocks = text2blocks(text)
     new_text = ''
     for block in blocks:
         if is_blank(block):
             new_text += '\n'
         else:
             prefix = detect_common_prefix(block)
+            if prefix == '':
+                prefix = detect_indentation(block)
             l = len(prefix)
             block = remove_common_prefix(block, prefix)
             if depth > 0 and l > 0:
                 block = justify_blocks(block, n-l, depth-1)
             else:
-                block = justify(block, n-l)
+                block = justify(block, n)
             block = prepend_common_prefix(block, prefix)
-            new_text += block
+            new_text += indentation + block
 
     # for some reason, the algorithm adds an extra new line. So, remove it.
     new_text = new_text[:-1]
