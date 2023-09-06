@@ -127,7 +127,7 @@ def remove_common_prefix(text, prefix):
     new_text = ''
 
     for line in lines:
-        new_line =  line.replace(prefix, '')
+        new_line =  line.replace(prefix, '', 1)
 
         # HEURISTIC: if the prefix ends with space,
         # we consider removing the prefix without the last space.
