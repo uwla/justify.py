@@ -66,47 +66,22 @@ def test_is_latex_command():
 
 def test_text2blocks():
     tests = [
-        # test 1
-        """
-A quo autem hic quis id neque. Dolor numquam non iure.
-Quod ipsum officia ad repudiandae est id.
-
-Eveniet dolores quis debitis. Deserunt quod tempora rerum ea hic cum.
-Est aperiam velit corrupti.
-Laudantium et laboriosam placeat quia consequatur perspiciatis id molestias.
-
-Blanditiis magnam consequatur aperiam rerum rerum.
-Voluptas cumque rerum et molestias quos at quis.""",
-        # test 2
-        """A quo autem hic quis id neque. Dolor numquam non iure.
-
-
-
-Blanditiis magnam consequatur aperiam rerum rerum.
-Voluptas cumque rerum et molestias quos at quis.
-""",
-
+        '\nA quo autem hic quis id neque. Dolor numquam non iure.\nQuod ipsum officia ad repudiandae est id.\n\nEveniet dolores quis debitis. Deserunt quod tempora rerum ea hic cum.\nEst aperiam velit corrupti.\nLaudantium et laboriosam placeat quia consequatur perspiciatis id molestias.\n\nBlanditiis magnam consequatur aperiam rerum rerum.\nVoluptas cumque rerum et molestias quos at quis.',
+        'A quo autem hic quis id neque. Dolor numquam non iure.\n\n\n\nBlanditiis magnam consequatur aperiam rerum rerum.\nVoluptas cumque rerum et molestias quos at quis.\n',
     ]
     expected = [
-        # test 1
         [
             '',
-            """A quo autem hic quis id neque. Dolor numquam non iure.
-Quod ipsum officia ad repudiandae est id.""",
+            'A quo autem hic quis id neque. Dolor numquam non iure.\nQuod ipsum officia ad repudiandae est id.',
             '',
-            """Eveniet dolores quis debitis. Deserunt quod tempora rerum ea hic cum.
-Est aperiam velit corrupti.
-Laudantium et laboriosam placeat quia consequatur perspiciatis id molestias.""",
+            'Eveniet dolores quis debitis. Deserunt quod tempora rerum ea hic cum.\nEst aperiam velit corrupti.\nLaudantium et laboriosam placeat quia consequatur perspiciatis id molestias.',
             '',
-            """Blanditiis magnam consequatur aperiam rerum rerum.
-Voluptas cumque rerum et molestias quos at quis.""",
+            'Blanditiis magnam consequatur aperiam rerum rerum.\nVoluptas cumque rerum et molestias quos at quis.',
         ],
-        # test 2
         [
             "A quo autem hic quis id neque. Dolor numquam non iure.",
             '', '', '',
-            """Blanditiis magnam consequatur aperiam rerum rerum.
-Voluptas cumque rerum et molestias quos at quis.""",
+            "Blanditiis magnam consequatur aperiam rerum rerum.\nVoluptas cumque rerum et molestias quos at quis.",
         ],
     ]
 
@@ -117,46 +92,14 @@ Voluptas cumque rerum et molestias quos at quis.""",
 
 def test_detect_common_prefix():
     tests = [
-# test 1
-"""# Lorem upsum
-# Quae voluptatum earum sapiente unde ab corporis ducimus iure. Debitis
-# voluptatibus id incidunt incidunt doloremque. Est ut laborum dolorum voluptas
-# reiciendis velit itaque voluptatibus. Tempora repellendus iure qui natus rerum""",
-
-# test 2
-"""# Quae voluptatum earum sapiente unde ab corporis ducimus iure. Debitis
-# voluptatibus id incidunt incidunt doloremque. Est ut laborum dolorum voluptas
-#
-#
-# reiciendis velit itaque voluptatibus. Tempora repellendus iure qui natus rerum
-# reiciendis""",
-
-# test 3
-"""\t\t\tHello
-\t\t\tQuae voluptatum earum sapiente unde ab corporis ducimus iure. Debitis
-\t\t\tvoluptatibus id incidunt incidunt doloremque. Est ut laborum dolorum voluptas
-""",
-
-# test 4
-"""    Lorem upsum
-    Quae voluptatum earum sapiente unde ab corporis ducimus iure. Debitis
-    voluptatibus id incidunt incidunt doloremque. Est ut laborum dolorum voluptas
-""",
-
-# test 5
-"""    // LOREM UPSUM
-    //
-    // Tempora repellendus iure qui natus rerum
-    // voluptatibus id incidunt incidunt doloremque.
-    // Est ut laborum dolorum voluptas
-    //
-    //
-    // Quae voluptatum earum sapiente unde ab corporis ducimus iure. Debitis
-""",
-
+        '# Lorem upsum\n# Quae voluptatum earum sapiente unde ab corporis ducimus iure. Debitis\n# voluptatibus id incidunt incidunt doloremque. Est ut laborum dolorum voluptas\n# reiciendis velit itaque voluptatibus. Tempora repellendus iure qui natus rerum',
+        '# Quae voluptatum earum sapiente unde ab corporis ducimus iure. Debitis\n# voluptatibus id incidunt incidunt doloremque. Est ut laborum dolorum voluptas\n#\n#\n# reiciendis velit itaque voluptatibus. Tempora repellendus iure qui natus rerum\n# reiciendis',
+        '\t\t\tHello\n\t\t\tQuae voluptatum earum sapiente unde ab corporis ducimus iure. Debitis\n\t\t\tvoluptatibus id incidunt incidunt doloremque. Est ut laborum dolorum voluptas\n',
+        '    Lorem upsum\n    Quae voluptatum earum sapiente unde ab corporis ducimus iure. Debitis\n    voluptatibus id incidunt incidunt doloremque. Est ut laborum dolorum voluptas\n',
+        '    // LOREM UPSUM\n    //\n    // Tempora repellendus iure qui natus rerum\n    // voluptatibus id incidunt incidunt doloremque.\n    // Est ut laborum dolorum voluptas\n    //\n    //\n    // Quae voluptatum earum sapiente unde ab corporis ducimus iure. Debitis',
     ]
     expected = [
-        "# ", "# ", "\t\t\t", "    ", "    // "
+        "# ", "#", "\t\t\t", "    ", "    //"
     ]
     for i in range(0, len(tests)):
         assert expected[i] == justify.detect_common_prefix(tests[i])
