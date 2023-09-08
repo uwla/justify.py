@@ -232,6 +232,7 @@ def justify_blocks(text, n=80, depth=2):
         blocks = text2blocks(remove_common_prefix(text, indentation))
     else:
         blocks = text2blocks(text)
+    n -= len(indentation)
     new_text = ''
     for block in blocks:
         if is_blank(block):
