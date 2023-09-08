@@ -2,6 +2,7 @@
 import re
 
 # ------------------------------------------------------------------------------
+# INPUT HELPERS
 
 def safe_input():
     try:
@@ -18,6 +19,7 @@ def read_input():
     return str
 
 # ------------------------------------------------------------------------------
+# HELPERS
 
 def is_alphanumeric(c):
     return re.match('^[a-zA-Z0-9]$', c)
@@ -32,6 +34,15 @@ def is_latex_command(line):
     return re.match('^\\\\[a-z]+(\[.*?\])?{.*?}$', line) != None
 
 def text2blocks(text):
+    """Split a text into blocks. Each  block  represents  consecutive  lines  or
+    empty lines.
+
+    Args:
+        text (string): text to be splitted
+
+    Returns:
+        list<string>: a list of blocks, which are strings.
+    """
     lines = text.splitlines()
     last_line = None
     blocks = []
@@ -65,6 +76,7 @@ def text2blocks(text):
     return blocks
 
 # ------------------------------------------------------------------------------
+# PREFIX AND INDENTATION HELPERS
 
 def detect_indentation(text):
     """Detect if consecutive lines have the same indentation level
@@ -73,7 +85,7 @@ def detect_indentation(text):
         text (string): string representing a text block
 
     Returns:
-        string: the indentation
+        string: the indentation itself
     """
 
     lines = text.split('\n')
@@ -139,6 +151,15 @@ def detect_common_prefix(text):
     return pattern
 
 def remove_common_prefix(text, prefix):
+    """Removes a prefix from every line of the given text.
+
+    Args:
+        text (string): prefixed text
+        prefix (string): prefix
+
+    Returns:
+        string: text without prefix
+    """
     lines = text.splitlines()
     new_text = ''
     for line in lines:
@@ -147,6 +168,15 @@ def remove_common_prefix(text, prefix):
     return new_text
 
 def prepend_common_prefix(text, prefix):
+    """Prepend a prefix to all lines of the given text.
+
+    Args:
+        text (string): unprefixed text
+        prefix (string): prefix.
+
+    Returns:
+        string: text with prefix
+    """
     lines = text.splitlines()
     new_text = ''
     for line in lines:
@@ -154,8 +184,18 @@ def prepend_common_prefix(text, prefix):
     return new_text
 
 # ------------------------------------------------------------------------------
+# JUSTIFY LOGIC
 
-def justify(text, n=80):
+def justify_block(text, n=80):
+    """Justify a single block of text that has no empty lines.
+
+    Args:
+        text (string): Text to be justified
+        n (int): line Width. Defaults to 80.
+
+    Returns:
+        string: justified text block.
+    """
     words = text.split()
     sentences = [
         {
@@ -218,15 +258,34 @@ def justify(text, n=80):
     return text
 
 def justify_list_item(text, n):
+    """Justify a list item text, indenting its line accordingly.
+
+    Args:
+        text (string): text representing a list item block
+        n (int): line width
+
+    Returns:
+        string: justified list item text
+    """
     bullet = re.match('^((\d+[\.\)])|[\*-]|\\\\item) ', text)[0]
     l = len(bullet)
     indentation = ' ' * l
-    new_text = justify(text.replace(bullet, '', 1), n-l)
+    new_text = justify_block(text.replace(bullet, '', 1), n-l)
     new_text = prepend_common_prefix(new_text, indentation)
     new_text = new_text.replace(indentation, bullet, 1)
     return new_text
 
-def justify_blocks(text, n=80, depth=2):
+def justify(text, n=80, depth=2):
+    """Justify-align the given text
+
+    Args:
+        text (string): Text to be justified.
+        n (int): Line width. Defaults to 80.
+        depth (int): How deep to justify the text's inner blocks. Defaults to 2.
+
+    Returns:
+        string: justified text
+    """
     indentation = detect_indentation(text)
     if indentation != '':
         blocks = text2blocks(remove_common_prefix(text, indentation))
@@ -247,9 +306,9 @@ def justify_blocks(text, n=80, depth=2):
             l = len(prefix)
             block = remove_common_prefix(block, prefix)
             if depth > 0 and l > 0:
-                block = justify_blocks(block, n-l, depth-1)
+                block = justify(block, n-l, depth-1)
             else:
-                block = justify(block, n)
+                block = justify_block(block, n)
             block = prepend_common_prefix(block, prefix)
             new_text += indentation + block
 
@@ -272,5 +331,5 @@ if __name__ == "__main__":
             w = int(argv[2])
 
     text = read_input()
-    text_justified = justify_blocks(text, w)
+    text_justified = justify(text, w)
     print(text_justified)
