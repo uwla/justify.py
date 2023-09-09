@@ -103,3 +103,15 @@ def test_detect_common_prefix():
     ]
     for i in range(0, len(tests)):
         assert expected[i] == justify.detect_common_prefix(tests[i])
+
+def test_justify_block():
+    text = "Labore ex id et laborum itaque. Nihil aspernatur aut officiis quos eveniet ex est. Quis mollitia voluptate optio. Nisi laboriosam nam animi et accusamus. Voluptatem explicabo qui facilis voluptate ut. Ut et dolores quas omnis. Et aut repellendus omnis facilis. Aliquam et rerum placeat quis deleniti saepe sed. Fugiat inventore sapiente nihil cupiditate dolores quia fuga velit. Veniam dolore porro aut ratione sed quis. Debitis voluptatem soluta eius delectus eum sint. Atque illo quae provident rem minus."
+    sizes = [50, 80, 120]
+    expected = [
+        "Labore ex id et laborum itaque.  Nihil  aspernatur\naut officiis quos eveniet ex  est.  Quis  mollitia\nvoluptate optio.  Nisi  laboriosam  nam  animi  et\naccusamus.  Voluptatem   explicabo   qui   facilis\nvoluptate ut. Ut et dolores  quas  omnis.  Et  aut\nrepellendus  omnis  facilis.  Aliquam   et   rerum\nplaceat quis deleniti saepe sed. Fugiat  inventore\nsapiente nihil cupiditate dolores quia fuga velit.\nVeniam dolore porro aut ratione sed quis.  Debitis\nvoluptatem soluta eius delectus  eum  sint.  Atque\nillo quae provident rem minus.",
+        "Labore ex id et laborum itaque. Nihil aspernatur aut officiis  quos  eveniet  ex\nest. Quis mollitia voluptate optio. Nisi  laboriosam  nam  animi  et  accusamus.\nVoluptatem explicabo qui facilis voluptate ut. Ut et dolores quas omnis. Et  aut\nrepellendus omnis facilis. Aliquam et rerum placeat  quis  deleniti  saepe  sed.\nFugiat inventore sapiente nihil  cupiditate  dolores  quia  fuga  velit.  Veniam\ndolore porro aut ratione sed quis. Debitis voluptatem soluta eius  delectus  eum\nsint. Atque illo quae provident rem minus.",
+        "Labore ex id et laborum itaque. Nihil aspernatur aut officiis quos eveniet ex est. Quis mollitia voluptate  optio.  Nisi\nlaboriosam nam animi et accusamus. Voluptatem explicabo qui facilis voluptate ut. Ut  et  dolores  quas  omnis.  Et  aut\nrepellendus omnis facilis. Aliquam et rerum placeat quis deleniti saepe sed. Fugiat inventore sapiente nihil  cupiditate\ndolores quia fuga velit. Veniam dolore porro aut ratione sed quis. Debitis voluptatem soluta  eius  delectus  eum  sint.\nAtque illo quae provident rem minus."
+    ]
+    l = len(sizes)
+    for i in range(0, l):
+        n = sizes[i]
