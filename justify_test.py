@@ -116,6 +116,19 @@ def test_remove_multiline_prefix():
         result = justify.remove_multiline_prefix(test, prefix)
         assert result == original
 
+def test_prepend_multineline_prefix():
+    original = "Magnam rerum ea cupiditate pariatur ipsam.\nEst sed sed suscipit et error maxime qui non.\nEt iure sequi nihil enim dolorum.\nConsequatur similique quam culpa et."
+    tests = ["# ", "    ", "//  " ]
+    expected = [
+        "# Magnam rerum ea cupiditate pariatur ipsam.\n# Est sed sed suscipit et error maxime qui non.\n# Et iure sequi nihil enim dolorum.\n# Consequatur similique quam culpa et.",
+        "    Magnam rerum ea cupiditate pariatur ipsam.\n    Est sed sed suscipit et error maxime qui non.\n    Et iure sequi nihil enim dolorum.\n    Consequatur similique quam culpa et.",
+        "//  Magnam rerum ea cupiditate pariatur ipsam.\n//  Est sed sed suscipit et error maxime qui non.\n//  Et iure sequi nihil enim dolorum.\n//  Consequatur similique quam culpa et.",
+    ]
+    for i in range(0, len(tests)):
+        prefix = tests[i]
+        result = justify.prepend_multiline_prefix(original, prefix)
+        assert expected[i] == result
+
 def test_justify_block():
     text = "Labore ex id et laborum itaque. Nihil aspernatur aut officiis quos eveniet ex est. Quis mollitia voluptate optio. Nisi laboriosam nam animi et accusamus. Voluptatem explicabo qui facilis voluptate ut. Ut et dolores quas omnis. Et aut repellendus omnis facilis. Aliquam et rerum placeat quis deleniti saepe sed. Fugiat inventore sapiente nihil cupiditate dolores quia fuga velit. Veniam dolore porro aut ratione sed quis. Debitis voluptatem soluta eius delectus eum sint. Atque illo quae provident rem minus."
     sizes = [50, 80, 120]
