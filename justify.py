@@ -113,7 +113,7 @@ def detect_indentation(text):
 
     return indentation
 
-def detect_common_prefix(text):
+def detect_multiline_prefix(text):
     """Detect if consecutive lines have the same text at the beginning.
     Can be used to detect comments.
 
@@ -150,7 +150,7 @@ def detect_common_prefix(text):
 
     return pattern
 
-def remove_common_prefix(text, prefix):
+def remove_multiline_prefix(text, prefix):
     """Removes a prefix from every line of the given text.
 
     Args:
@@ -168,7 +168,7 @@ def remove_common_prefix(text, prefix):
     new_text += lines[-1].replace(prefix, '', 1)
     return new_text
 
-def prepend_common_prefix(text, prefix):
+def prepend_multiline_prefix(text, prefix):
     """Prepend a prefix to all lines of the given text.
 
     Args:
@@ -272,7 +272,7 @@ def justify_list_item(text, n):
     l = len(bullet)
     indentation = ' ' * l
     new_text = justify_block(text.replace(bullet, '', 1), n-l)
-    new_text = prepend_common_prefix(new_text, indentation)
+    new_text = prepend_multiline_prefix(new_text, indentation)
     new_text = new_text.replace(indentation, bullet, 1)
     return new_text
 
@@ -289,7 +289,7 @@ def justify(text, n=80, depth=2):
     """
     indentation = detect_indentation(text)
     if indentation != '':
-        blocks = text2blocks(remove_common_prefix(text, indentation))
+        blocks = text2blocks(remove_multiline_prefix(text, indentation))
     else:
         blocks = text2blocks(text)
     n -= len(indentation)
@@ -301,16 +301,16 @@ def justify(text, n=80, depth=2):
             block = justify_list_item(block, n)
             new_text += indentation + block
         else:
-            prefix = detect_common_prefix(block)
+            prefix = detect_multiline_prefix(block)
             if prefix == '':
                 prefix = detect_indentation(block)
             l = len(prefix)
-            block = remove_common_prefix(block, prefix)
+            block = remove_multiline_prefix(block, prefix)
             if depth > 0 and l > 0:
                 block = justify(block, n-l, depth-1)
             else:
                 block = justify_block(block, n)
-            block = prepend_common_prefix(block, prefix)
+            block = prepend_multiline_prefix(block, prefix)
             new_text += indentation + block
 
     # for some reason, the algorithm adds an extra new line. So, remove it.

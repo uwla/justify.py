@@ -90,7 +90,7 @@ def test_text2blocks():
         assert len(blocks) == len(expected[i])
         assert blocks == expected[i]
 
-def test_detect_common_prefix():
+def test_detect_multiline_prefix():
     tests = [
         '# Lorem upsum\n# Quae voluptatum earum sapiente unde ab corporis ducimus iure. Debitis\n# voluptatibus id incidunt incidunt doloremque. Est ut laborum dolorum voluptas\n# reiciendis velit itaque voluptatibus. Tempora repellendus iure qui natus rerum',
         '# Quae voluptatum earum sapiente unde ab corporis ducimus iure. Debitis\n# voluptatibus id incidunt incidunt doloremque. Est ut laborum dolorum voluptas\n#\n#\n# reiciendis velit itaque voluptatibus. Tempora repellendus iure qui natus rerum\n# reiciendis',
@@ -102,9 +102,9 @@ def test_detect_common_prefix():
         "# ", "#", "\t\t\t", "    ", "    //"
     ]
     for i in range(0, len(tests)):
-        assert expected[i] == justify.detect_common_prefix(tests[i])
+        assert expected[i] == justify.detect_multiline_prefix(tests[i])
 
-def test_remove_common_prefix():
+def test_remove_multiline_prefix():
     original = "Magnam rerum ea cupiditate pariatur ipsam.\nEst sed sed suscipit et error maxime qui non.\nEt iure sequi nihil enim dolorum.\nConsequatur similique quam culpa et."
     tests = [
         "# Magnam rerum ea cupiditate pariatur ipsam.\n# Est sed sed suscipit et error maxime qui non.\n# Et iure sequi nihil enim dolorum.\n# Consequatur similique quam culpa et.",
@@ -112,8 +112,8 @@ def test_remove_common_prefix():
         "//  Magnam rerum ea cupiditate pariatur ipsam.\n//  Est sed sed suscipit et error maxime qui non.\n//  Et iure sequi nihil enim dolorum.\n//  Consequatur similique quam culpa et.",
     ]
     for test in tests:
-        prefix = justify.detect_common_prefix(test)
-        result = justify.remove_common_prefix(test, prefix)
+        prefix = justify.detect_multiline_prefix(test)
+        result = justify.remove_multiline_prefix(test, prefix)
         assert result == original
 
 def test_justify_block():
