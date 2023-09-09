@@ -104,6 +104,18 @@ def test_detect_common_prefix():
     for i in range(0, len(tests)):
         assert expected[i] == justify.detect_common_prefix(tests[i])
 
+def test_remove_common_prefix():
+    original = "Magnam rerum ea cupiditate pariatur ipsam.\nEst sed sed suscipit et error maxime qui non.\nEt iure sequi nihil enim dolorum.\nConsequatur similique quam culpa et."
+    tests = [
+        "# Magnam rerum ea cupiditate pariatur ipsam.\n# Est sed sed suscipit et error maxime qui non.\n# Et iure sequi nihil enim dolorum.\n# Consequatur similique quam culpa et.",
+        "    Magnam rerum ea cupiditate pariatur ipsam.\n    Est sed sed suscipit et error maxime qui non.\n    Et iure sequi nihil enim dolorum.\n    Consequatur similique quam culpa et.",
+        "//  Magnam rerum ea cupiditate pariatur ipsam.\n//  Est sed sed suscipit et error maxime qui non.\n//  Et iure sequi nihil enim dolorum.\n//  Consequatur similique quam culpa et.",
+    ]
+    for test in tests:
+        prefix = justify.detect_common_prefix(test)
+        result = justify.remove_common_prefix(test, prefix)
+        assert result == original
+
 def test_justify_block():
     text = "Labore ex id et laborum itaque. Nihil aspernatur aut officiis quos eveniet ex est. Quis mollitia voluptate optio. Nisi laboriosam nam animi et accusamus. Voluptatem explicabo qui facilis voluptate ut. Ut et dolores quas omnis. Et aut repellendus omnis facilis. Aliquam et rerum placeat quis deleniti saepe sed. Fugiat inventore sapiente nihil cupiditate dolores quia fuga velit. Veniam dolore porro aut ratione sed quis. Debitis voluptatem soluta eius delectus eum sint. Atque illo quae provident rem minus."
     sizes = [50, 80, 120]
