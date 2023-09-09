@@ -180,8 +180,9 @@ def prepend_multiline_prefix(text, prefix):
     """
     lines = text.splitlines()
     new_text = ''
-    for line in lines:
+    for line in lines[:-1]:
         new_text += prefix + line + '\n'
+    new_text += prefix + lines[-1]
     return new_text
 
 # ------------------------------------------------------------------------------
