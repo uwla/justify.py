@@ -316,12 +316,9 @@ def justify(text, n=80, depth=2):
             if depth > 0 and l > 0:
                 block = justify(block, n-l, depth-1)
             else:
-                block = justify_block(block, n)
+                block = justify_block(block, n-l)
             block = prepend_multiline_prefix(block, prefix)
             new_text += indentation + block
-
-    # for some reason, the algorithm adds an extra new line. So, remove it.
-    new_text = new_text[:-1]
 
     return new_text
 
@@ -340,4 +337,4 @@ if __name__ == "__main__":
 
     text = read_input()
     text_justified = justify(text, w)
-    print(text_justified)
+    print(text_justified, end='')

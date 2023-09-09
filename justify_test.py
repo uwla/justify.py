@@ -157,3 +157,11 @@ def test_justify_list_item():
         item = bullets[i] + original
         result = justify.justify_list_item(item, 80)
         assert result == expected[i]
+
+def test_justify():
+    with open('A.txt', 'r') as f:
+        text = f.read()
+    with open('B.txt', 'r') as f:
+        expected = f.read()
+    result = justify.justify(text)
+    assert result == expected
