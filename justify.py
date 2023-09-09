@@ -165,7 +165,7 @@ def remove_multiline_prefix(text, prefix):
     for line in lines[:-1]:
         new_line =  line.replace(prefix, '', 1)
         new_text += new_line + '\n'
-    new_text += lines[-1].replace(prefix, '', 1)
+    new_text += lines[-1].replace(prefix, '', 1) + '\n'
     return new_text
 
 def prepend_multiline_prefix(text, prefix):
@@ -182,7 +182,7 @@ def prepend_multiline_prefix(text, prefix):
     new_text = ''
     for line in lines[:-1]:
         new_text += prefix + line + '\n'
-    new_text += prefix + lines[-1]
+    new_text += prefix + lines[-1] + '\n'
     return new_text
 
 # ------------------------------------------------------------------------------
