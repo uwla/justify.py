@@ -140,3 +140,20 @@ def test_justify_block():
     l = len(sizes)
     for i in range(0, l):
         n = sizes[i]
+
+def test_justify_list_item():
+    original = "Est incidunt perferendis sed beatae sint provident culpa. Ducimus ea nemo animi ea et et et. Cumque eos quidem in quia velit vel rerum. Repellendus possimus provident qui veritatis magnam totam."
+    bullets = ["- ", "* ", "\\item ", "1. ", "1) ", "12. ", "12) "]
+    expected = [
+        "- Est incidunt perferendis sed beatae sint  provident  culpa.  Ducimus  ea  nemo\n  animi ea et et et. Cumque eos quidem in  quia  velit  vel  rerum.  Repellendus\n  possimus provident qui veritatis magnam totam.",
+        "* Est incidunt perferendis sed beatae sint  provident  culpa.  Ducimus  ea  nemo\n  animi ea et et et. Cumque eos quidem in  quia  velit  vel  rerum.  Repellendus\n  possimus provident qui veritatis magnam totam.",
+        "\item Est incidunt perferendis sed beatae sint provident culpa. Ducimus ea  nemo\n      animi ea et et et. Cumque eos quidem in quia velit vel rerum.  Repellendus\n      possimus provident qui veritatis magnam totam.",
+        "1. Est incidunt perferendis sed beatae sint provident  culpa.  Ducimus  ea  nemo\n   animi ea et et et. Cumque eos quidem in quia  velit  vel  rerum.  Repellendus\n   possimus provident qui veritatis magnam totam.",
+        "1) Est incidunt perferendis sed beatae sint provident  culpa.  Ducimus  ea  nemo\n   animi ea et et et. Cumque eos quidem in quia  velit  vel  rerum.  Repellendus\n   possimus provident qui veritatis magnam totam.",
+        "12. Est incidunt perferendis sed beatae sint provident culpa.  Ducimus  ea  nemo\n    animi ea et et et. Cumque eos quidem in quia velit  vel  rerum.  Repellendus\n    possimus provident qui veritatis magnam totam.",
+        "12) Est incidunt perferendis sed beatae sint provident culpa.  Ducimus  ea  nemo\n    animi ea et et et. Cumque eos quidem in quia velit  vel  rerum.  Repellendus\n    possimus provident qui veritatis magnam totam.",
+    ]
+    for i in range(0, len(bullets)):
+        item = bullets[i] + original
+        result = justify.justify_list_item(item, 80)
+        assert result == expected[i]
