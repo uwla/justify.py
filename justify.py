@@ -162,9 +162,10 @@ def remove_common_prefix(text, prefix):
     """
     lines = text.splitlines()
     new_text = ''
-    for line in lines:
+    for line in lines[:-1]:
         new_line =  line.replace(prefix, '', 1)
         new_text += new_line + '\n'
+    new_text += lines[-1].replace(prefix, '', 1)
     return new_text
 
 def prepend_common_prefix(text, prefix):
