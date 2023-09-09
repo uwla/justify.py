@@ -21,9 +21,6 @@ def read_input():
 # ------------------------------------------------------------------------------
 # HELPERS
 
-def is_alphanumeric(c):
-    return re.match('^[a-zA-Z0-9]$', c)
-
 def is_blank(line):
     return line == '' or re.match('^[\s\t]+$', line) != None
 
@@ -136,8 +133,6 @@ def detect_multiline_prefix(text):
         if len(lines[0]) <= i:
             break
         c = lines[0][i]
-        if is_alphanumeric(c):
-            break
         for line in lines[1:]:
             l = len(line)
             if (i >= l or line[i] != c):
@@ -148,6 +143,17 @@ def detect_multiline_prefix(text):
         pattern += c
         i += 1
 
+    # Some list item bullets such as *, -, \item, are  not  treated  like  prefixes
+    # because such prefixes only apply  to  the  first  line,  not  to  all  lines.
+    # Therefore, if pattern matches a list item, it is not a prefix.
+    normalized = pattern.replace(' ', '').replace("\t", '')
+    if is_start_of_list_item(normalized + ' '):
+        return ''
+
+    # remove alpha numeric characters from pattern
+    pattern = re.sub(r'\w.*', '', pattern)
+
+    # return the final pattern, which may be empty
     return pattern
 
 def remove_multiline_prefix(text, prefix):
