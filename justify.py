@@ -27,6 +27,9 @@ def is_blank(line):
 def is_start_of_list_item(line):
     return re.match('^((\d+[\.\)])|[\*-]|\\\\item) ', line) != None
 
+def indented_start_of_list_item(line):
+    return re.match('^[\s\t]+((\d+[\.\)])|[\*-]|\\\\item) ', line) != None
+
 def is_latex_command(line):
     return re.match('^\\\\[a-z]+(\[.*?\])?{.*?}$', line) != None
 
@@ -45,6 +48,9 @@ def text2blocks(text):
     blocks = []
     block = ''
     l = len(lines)
+
+    last_indentation = ''
+
     for i in range(0, l):
         line = lines[i]
         if is_blank(line):
@@ -62,6 +68,15 @@ def text2blocks(text):
             blocks.append(line)
             block = ''
         else:
+            ## trying to detect indentation switch
+            # m = re.match('^[\s\t]+', line)
+            # if m != None and not indented_start_of_list_item(line) and not is_blank(block):
+            #     indentation = m.group()
+            #     if indentation != last_indentation:
+            #         last_indentation = indentation
+            #         blocks.append(block)
+            #         block = ''
+
             if block != '':
                 block += '\n'
             block += line
@@ -70,6 +85,7 @@ def text2blocks(text):
         # If it is a blank block, it was already added.
         if not is_blank(block) and i == l-1:
             blocks.append(block)
+
     return blocks
 
 # ------------------------------------------------------------------------------
@@ -85,7 +101,7 @@ def detect_indentation(text):
         string: the indentation itself
     """
 
-    lines = text.split('\n')
+    lines = text.splitlines()
     l = len(lines)
     if l == 0:
         raise Exception('No lines detected')
@@ -99,13 +115,8 @@ def detect_indentation(text):
     
     indentation = match.group()
 
-    for i in range(1, l):
-        line = lines[i]
-        match = re.search('^[\s\t]+', line)
-        if match == None:
-            return ''
-        current_line_indentation = match.group()
-        if current_line_indentation != indentation:
+    for line in lines[1:]:
+        if not line.startswith(indentation):
             return ''
 
     return indentation
@@ -146,8 +157,7 @@ def detect_multiline_prefix(text):
     # Some list item bullets such as *, -, \item, are  not  treated  like  prefixes
     # because such prefixes only apply  to  the  first  line,  not  to  all  lines.
     # Therefore, if pattern matches a list item, it is not a prefix.
-    normalized = pattern.replace(' ', '').replace("\t", '')
-    if is_start_of_list_item(normalized + ' '):
+    if indented_start_of_list_item(pattern):
         return ''
 
     # remove alpha numeric characters from pattern
@@ -317,8 +327,8 @@ def justify(text, n=80, depth=2):
                 block = justify(block, n-l, depth-1)
             else:
                 block = justify_block(block, n-l)
-            block = prepend_multiline_prefix(block, prefix)
-            new_text += indentation + block
+            block = prepend_multiline_prefix(block, indentation + prefix)
+            new_text += block
 
     return new_text
 
