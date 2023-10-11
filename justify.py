@@ -22,16 +22,16 @@ def read_input():
 # HELPERS
 
 def is_blank(line):
-    return line == '' or re.match('^[\s\t]+$', line) != None
+    return line == '' or re.match('^[\\s\t]+$', line) != None
 
 def is_start_of_list_item(line):
-    return re.match('^((\d+[\.\)])|[\*-]|\\\\item) ', line) != None
+    return re.match('^((\\d+[\\.\\)])|[\\*-]|\\\\item) ', line) != None
 
 def indented_start_of_list_item(line):
-    return re.match('^[\s\t]+((\d+[\.\)])|[\*-]|\\\\item) ', line) != None
+    return re.match('^[\\s\t]+((\\d+[\\.\\)])|[\\*-]|\\\\item) ', line) != None
 
 def is_latex_command(line):
-    return re.match('^\\\\[a-z]+(\[.*?\])?{.*?}$', line) != None
+    return re.match('^\\\\[a-z]+(\\[.*?\\])?{.*?}$', line) != None
 
 def text2blocks(text):
     """Split a text into blocks. Each  block  represents  consecutive  lines  or
@@ -107,7 +107,7 @@ def detect_indentation(text):
         raise Exception('No lines detected')
 
     first_line = lines[0]
-    match = re.search('^[\s\t]+', first_line)
+    match = re.search('^[\\s\t]+', first_line)
 
     # no indentation
     if match == None:
@@ -285,7 +285,8 @@ def justify_list_item(text, n):
     Returns:
         string: justified list item text
     """
-    bullet = re.match('^((\d+[\.\)])|[\*-]|\\\\item) ', text)[0]
+    match = re.match('^((\\d+[\\.\\)])|[\\*-]|\\\\item) ', text)
+    bullet = match[0]
     l = len(bullet)
     indentation = ' ' * l
     new_text = justify_block(text.replace(bullet, '', 1), n-l)
@@ -348,3 +349,4 @@ if __name__ == "__main__":
     text = read_input()
     text_justified = justify(text, w)
     print(text_justified, end='')
+
