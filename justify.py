@@ -25,7 +25,7 @@ def is_blank(line):
     return line == '' or re.match('^[\\s\t]+$', line) != None
 
 def is_start_of_list_item(line):
-    return re.match('^((\\d+[\\.\\)])|[\\*-]|\\\\item) ', line) != None
+    return re.match('^((\\d+[\\.\\)])|[\\*-]|\\\\item|\\[\\d+\\]) ', line) != None
 
 def indented_start_of_list_item(line):
     return re.match('^[\\s\t]+((\\d+[\\.\\)])|[\\*-]|\\\\item) ', line) != None
@@ -285,7 +285,7 @@ def justify_list_item(text, n):
     Returns:
         string: justified list item text
     """
-    match = re.match('^((\\d+[\\.\\)])|[\\*-]|\\\\item) ', text)
+    match = re.match('^((\\d+[\\.\\)])|[\\*-]|\\\\item|\\[\\d+\\]) ', text)
     bullet = match[0]
     l = len(bullet)
     indentation = ' ' * l
