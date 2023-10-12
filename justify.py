@@ -33,6 +33,9 @@ def indented_start_of_list_item(line):
 def is_latex_command(line):
     return re.match('^\\\\[a-z]+(\\[.*?\\])?{.*?}$', line) != None
 
+def is_line_title(line):
+    return re.match('^#+ .+', line) != None or (re.match('^(\\w\\s?)+', line) != None and re.match('[a-z]', line) == None)
+
 def text2blocks(text):
     """Split a text into blocks. Each  block  represents  consecutive  lines  or
     empty lines.
@@ -62,6 +65,11 @@ def text2blocks(text):
             if block != '':
                 blocks.append(block)
             block = line
+        # elif is_line_title(line):
+        #     if block != '':
+        #         blocks.append(block)
+        #         block = ''
+        #     blocks.append(line)
         elif is_latex_command(line):
             if block != '':
                 blocks.append(block)
