@@ -28,6 +28,8 @@ def test_is_start_of_list_item():
         '5) test test test test.'
         '15. test test test test.'
         '15) test test test test.'
+        '[2] test test test test.'
+        '[12] test test test test.'
         '\\item Test test test.',
     ]
     tests_2 = [
@@ -40,6 +42,9 @@ def test_is_start_of_list_item():
         '15 test test test test.'
         '15.test test test test.'
         '15)test test test test.'
+        '20] test test test test.'
+        '[20 test test test test.'
+        '[20]test test test test.'
     ]
     for test in tests_1:
         assert justify.is_start_of_list_item(test)
