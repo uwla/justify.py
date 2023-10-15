@@ -24,11 +24,16 @@ def read_input():
 def is_blank(line):
     return line == '' or re.match('^[\\s\t]+$', line) != None
 
+REGEX_BULLET = '\\d+[\\.\\)]|[\\*-]|\\\\item|\\[\\d+\\]'
+REGEX_LIST_ITEM = f"^({REGEX_BULLET}) "
+REGEX_LIST_ITEM_INDENTED = f"^[\\s\t]+({REGEX_BULLET}) "
+
 def is_start_of_list_item(line):
-    return re.match('^((\\d+[\\.\\)])|[\\*-]|\\\\item|\\[\\d+\\]) ', line) != None
+    return re.match(REGEX_LIST_ITEM, line) != None
+    # return re.match('^(\\d+[\\.\\)]|[\\*-]|\\\\item|\\[\\d+\\]|•|·) ', line) != None
 
 def indented_start_of_list_item(line):
-    return re.match('^[\\s\t]+((\\d+[\\.\\)])|[\\*-]|\\\\item) ', line) != None
+    return re.match(REGEX_LIST_ITEM_INDENTED, line) != None
 
 def is_latex_command(line):
     return re.match('^\\\\[a-z]+(\\[.*?\\])?{.*?}$', line) != None
@@ -283,6 +288,7 @@ def justify_block(text, n=80):
 
     return text
 
+
 def justify_list_item(text, n):
     """Justify a list item text, indenting its line accordingly.
 
@@ -293,7 +299,7 @@ def justify_list_item(text, n):
     Returns:
         string: justified list item text
     """
-    match = re.match('^((\\d+[\\.\\)])|[\\*-]|\\\\item|\\[\\d+\\]) ', text)
+    match = re.match(REGEX_LIST_ITEM, text)
     bullet = match[0]
     l = len(bullet)
     indentation = ' ' * l
