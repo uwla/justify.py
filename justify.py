@@ -331,6 +331,7 @@ def justify(text, n=80, depth=2):
             new_text += '\n'
         elif is_start_of_list_item(block):
             block = justify_list_item(block, n)
+            block = re.sub('\n', '\n' + indentation, block)
             new_text += indentation + block
         else:
             prefix = detect_multiline_prefix(block)
