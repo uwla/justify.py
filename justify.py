@@ -61,7 +61,8 @@ def text2blocks(text):
 
     for i in range(0, l):
         line = lines[i]
-        if is_blank(line):
+        if is_blank(line) or is_latex_command(line):
+        # if is_blank(line) or is_latex_command(line) or is_line_title(line):
             if block != '':
                 blocks.append(block)
             blocks.append(line)
@@ -70,16 +71,6 @@ def text2blocks(text):
             if block != '':
                 blocks.append(block)
             block = line
-        # elif is_line_title(line):
-        #     if block != '':
-        #         blocks.append(block)
-        #         block = ''
-        #     blocks.append(line)
-        elif is_latex_command(line):
-            if block != '':
-                blocks.append(block)
-            blocks.append(line)
-            block = ''
         else:
             ## trying to detect indentation switch
             # m = re.match('^[\s\t]+', line)
@@ -194,7 +185,7 @@ def remove_multiline_prefix(text, prefix):
     for line in lines[:-1]:
         new_line =  line.replace(prefix, '', 1)
         new_text += new_line + '\n'
-    new_text += lines[-1].replace(prefix, '', 1) + '\n'
+    new_text += lines[-1].replace(prefix, '', 1)
     return new_text
 
 def prepend_multiline_prefix(text, prefix):
@@ -211,7 +202,7 @@ def prepend_multiline_prefix(text, prefix):
     new_text = ''
     for line in lines[:-1]:
         new_text += prefix + line + '\n'
-    new_text += prefix + lines[-1] + '\n'
+    new_text += prefix + lines[-1]
     return new_text
 
 # ------------------------------------------------------------------------------
@@ -288,7 +279,6 @@ def justify_block(text, n=80):
 
     return text
 
-
 def justify_list_item(text, n):
     """Justify a list item text, indenting its line accordingly.
 
@@ -326,14 +316,14 @@ def justify(text, n=80, depth=2):
         blocks = text2blocks(text)
     n -= len(indentation)
     new_text = ''
-    for block in blocks:
-        if is_blank(block):
-            new_text += '\n'
-        elif is_start_of_list_item(block):
+    n_blocks = len(blocks)
+    for i in range(0, n_blocks):
+        block = blocks[i]
+        if is_start_of_list_item(block):
             block = justify_list_item(block, n)
             block = re.sub('\n', '\n' + indentation, block)
             new_text += indentation + block
-        else:
+        elif not is_blank(block):
             prefix = detect_multiline_prefix(block)
             if prefix == '':
                 prefix = detect_indentation(block)
@@ -345,6 +335,9 @@ def justify(text, n=80, depth=2):
                 block = justify_block(block, n-l)
             block = prepend_multiline_prefix(block, indentation + prefix)
             new_text += block
+
+        if i != n_blocks - 1:
+            new_text += "\n"
 
     return new_text
 
